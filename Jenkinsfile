@@ -20,7 +20,7 @@ pipeline{
         stage("testing the code"){
             steps{
                 sh "mvn test"
-                echo 'run and execute the test cases written in selenium'
+                echo 'run and execute the test cases'
             }
         }
         stage("code review to check quality of code"){
