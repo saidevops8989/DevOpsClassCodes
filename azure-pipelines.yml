@@ -3,6 +3,9 @@ trigger:
   branches:
     include:
     - master
+  paths:
+    exclude:
+      - '*'
 pool:
   vmImage: 'ubuntu-latest'
 variables:
@@ -41,3 +44,12 @@ steps:
   displayName: 'Package code'
   env:
     MAVEN_OPTS: '-Xmx2048m -XX:MaxPermSize=512m'
+- script: |
+    docker build -t $docker_image_name .
+    docker login
+    docker push $docker_image_name
+    echo 'docker image built and pushed to Docker Hub'
+  displayName: 'Build and push Docker image'
+  env:
+    DOCKER_REGISTRY_USERNAME: 'myusername'
+    DOCKER_REGISTRY_PASSWORD: '$(DOCKER_REGISTRY_PASSWORD)'
