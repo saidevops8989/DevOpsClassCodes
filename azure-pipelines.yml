@@ -1,22 +1,43 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
+# azure-pipelines.yml
 trigger:
-- master
-
+  branches:
+    include:
+    - master
 pool:
-  vmImage: ubuntu-latest
-
+  vmImage: 'ubuntu-latest'
+variables:
+  maven_version: '3.8.1'
 steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+- script: |
+    mkdir mymaven
+    cd mymaven
+    curl -L https://github.com/saidevops8989/DevOpsClassCodes.git | tar xz
+    echo 'pulled from github successfully'
+  displayName: 'Checkout code from GitHub'
+- script: |
+    export MAVEN_HOME=$(pwd)/mymaven
+    export PATH=$PATH:$MAVEN_HOME/bin
+    mvn -v
+    mvn compile
+    echo 'converted the code from human readable to machine readable'
+  displayName: 'Compile code'
+  env:
+    MAVEN_OPTS: '-Xmx2048m -XX:MaxPermSize=512m'
+- script: |
+    mvn test
+    echo 'run and execute the test cases'
+  displayName: 'Test code'
+  env:
+    MAVEN_OPTS: '-Xmx2048m -XX:MaxPermSize=512m'
+- script: |
+    mvn pmd:pmd
+    echo 'code review done'
+  displayName: 'Code review'
+  env:
+    MAVEN_OPTS: '-Xmx2048m -XX:MaxPermSize=512m'
+- script: |
+    mvn package
+    echo 'convert the files to war file'
+  displayName: 'Package code'
+  env:
+    MAVEN_OPTS: '-Xmx2048m -XX:MaxPermSize=512m'
