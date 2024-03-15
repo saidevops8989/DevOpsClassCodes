@@ -46,11 +46,11 @@ steps:
     MAVEN_OPTS: '-Xmx2048m -XX:MaxPermSize=512m'
 - script: |
     BUILD_NUMBER=$(echo $BUILD_NUMBER | sed 's/[^0-9]//g')
-    docker build -t $docker_image_name:$BUILD_NUMBER .
+    docker build -t devopsstuff09/addressbook:$BUILD_NUMBER .
     docker login
-    #docker push $docker_image_name:$BUILD_NUMBER
     #docker tag $docker_image_name $(DOCKER_USERNAME)/$docker_image_name:$BUILD_NUMBER
-    docker push $docker_image_name:$BUILD_NUMBER
+    #docker push $docker_image_name:$BUILD_NUMBER
+     docker push devopsstuff09/addressbook:$BUILD_NUMBER
     echo 'docker image built and pushed to Docker Hub'
   displayName: 'Build and push Docker image'
   env:
