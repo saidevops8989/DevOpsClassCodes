@@ -45,9 +45,9 @@ steps:
   env:
     MAVEN_OPTS: '-Xmx2048m -XX:MaxPermSize=512m'
 - script: |
-    docker build -t $docker_image_name:$buildnumber .
+    BUILD_NUMBER=$(echo $BUILD_NUMBER | sed 's/[^0-9]//g')
+    docker build -t $docker_image_name:$BUILD_NUMBER .
     docker login
-    #BUILD_NUMBER=$(echo $BUILD_NUMBER | sed 's/[^0-9]//g')
     #docker push $docker_image_name:$BUILD_NUMBER
     #docker tag $docker_image_name $(DOCKER_USERNAME)/$docker_image_name:$BUILD_NUMBER
     docker push $docker_image_name:$BUILD_NUMBER
